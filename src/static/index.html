@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    <title>Hello!</title>
+</head>
+<body>
+    <noscript>
+        <div id="hello">
+            <h1>Browser Fingerprinting Demo</h1>
+            <hr/>
+            <p>This page is for educational purposes only.</p>
+            <p>JavaScript is required to see the fingerprinting demonstration.</p>
+            <p>Take care and stay safe.<b class="cursor">&nbsp;</b></p>
+        </div>
+    </noscript>
+    <div id="content" class="hidden">
+        <h1>Browser Fingerprint Demo</h1>
+        <hr/>
+        <p>This page is for educational purposes only.</p>
+        <p>It simply demonstrates what data websites can access through your browser.</p>
+        <p>Take care and stay safe.</p>
+
+        <div id="loading">Collecting data... <b class="blinking-cursor">&nbsp;</b></div>
+        <div id="results" class="hidden">
+            <div class="menubar">
+                <div class="menu-text"></div>
+                <div class="menu-buttons">
+                    <button class="button" onclick="copyToClipboard()">
+                        <span class="copy-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div id="output"></div>
+        </div>
+        <div id="error" class="hidden" style="color: red;"></div>
+        <div id="tests" class="test-elements">
+            <div class="test-element" id="element1">
+                <h3>Element 1</h3>
+                <div class="element-box">Box 1</div>
+                <div class="rect-info">Click "Generate Fingerprint" to see ClientRect info</div>
+            </div>
+
+            <div class="test-element" id="element2">
+                <h3>Element 2</h3>
+                <div class="element-box" style="border: 3px solid #ff9966; padding: 5px;">Box 2</div>
+                <div class="rect-info">Click "Generate Fingerprint" to see ClientRect info</div>
+            </div>
+
+            <div class="test-element" id="element3">
+                <h3>Element 3</h3>
+                <div class="element-box" style="transform: rotate(5deg);">Box 3</div>
+                <div class="rect-info">Click "Generate Fingerprint" to see ClientRect info</div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/start.js"></script>
+
+    <script src="/js/navigator.js"></script>
+    <script src="/js/chromium.js"></script>
+    <script src="/js/errors.js"></script>
+    <script src="/js/math.js"></script>
+    <script src="/js/datetime.js"></script>
+    <script src="/js/storage.js"></script>
+    <script src="/js/connection.js"></script>
+    <script src="/js/screen.js"></script>
+    <script src="/js/clientrects.js"></script>
+    <script src="/js/uibars.js"></script>
+
+    <script src="/js/permissions.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/codecs.js"></script>
+    <script src="/js/fonts.js"></script>
+
+    <script src="/js/webgl.js"></script>
+    <script src="/js/webgpu.js"></script>
+    <script src="/js/audio.js"></script>
+    <script src="/js/media.js"></script>
+    <script src="/js/input.js"></script>
+    <script src="/js/battery.js"></script>
+    <script src="/js/sensors.js"></script>
+    <script src="/js/orientation.js"></script>
+
+    <script src="/js/canvas.js"></script>
+    <script src="/js/css.js"></script>
+    <script src="/js/tls.js"></script>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/utils.js"></script>
+</body>
+</html>
