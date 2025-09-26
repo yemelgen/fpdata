@@ -64,4 +64,4 @@ async function runCollectors() {
         document.getElementById('error').textContent = 'Error: ' + e.message;
     }
 }
-window.onload = runCollectors;
+document.addEventListener('DOMContentLoaded', runCollectors);
