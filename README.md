@@ -7,7 +7,7 @@ It uses pure JavaScript to collect client-side data, which you can then analyze 
 
 The framework gathers a wide range of signals (Canvas, WebGL, ClientRects, Fonts, Headers, etc.).
 
-> **Live Demo**: [See your browser fingerprint now](https://dev.yemel.org)
+> **Live Demo**: [See your browser fingerprint now](https://dev.yemel.org/fpdata)
 
 
 ### Use Cases

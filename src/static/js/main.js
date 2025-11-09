@@ -39,7 +39,7 @@ async function runCollectors() {
 
     try {
         // Send to server and get response
-        const response = await fetch("/fingerprint/calculate", {
+        const response = await fetch("/api/fpdata/calculate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(results)
