@@ -1,19 +1,4 @@
 function summarizeFloat32(data) {
-    let min = Infinity, max = -Infinity, sum = 0;
-    for (let i = 0; i < data.length; i++) {
-        const v = data[i];
-        if (v < min) min = v;
-        if (v > max) max = v;
-        sum += v;
-    }
-    return {
-        min,
-        max,
-        mean: sum / data.length
-    };
-}
-
-function summarizeFloat32(data) {
     let min = Infinity, max = -Infinity, sum = 0, sumSq = 0;
     for (let i = 0; i < data.length; i++) {
         const v = data[i];
@@ -25,7 +10,6 @@ function summarizeFloat32(data) {
     const mean = sum / data.length;
     const variance = (sumSq / data.length) - (mean * mean);
 
-    // quick integer hash
     let hash = 0;
     for (let i = 0; i < data.length; i += Math.floor(data.length / 64) || 1) {
         hash = ((hash << 5) - hash + Math.floor(data[i] * 1e6)) | 0;

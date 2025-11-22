@@ -1,61 +1,57 @@
 async function collectPrototypes() {
-    function isNativeFunction(fn) {
-        try {
-            return typeof fn === "function" && /\{\s*\[native code\]\s*\}/.test(Function.prototype.toString.call(fn));
-        } catch {
-            return false;
-        }
-    }
+    const visited = new WeakSet();
 
     function collect(obj, maxDepth = 5) {
-        const properties = [];
+        const out = [];
 
-        function walk(target, depth = 0) {
-            if (!target || depth > maxDepth) return;
+        function walk(target, depth) {
+            if (!target || depth > maxDepth || visited.has(target)) return;
+            visited.add(target);
+
+            let props;
             try {
-                const props = Object.getOwnPropertyNames(target);
-                for (const prop of props) {
-                    try {
-                        const desc = Object.getOwnPropertyDescriptor(target, prop);
-                        let type = "unknown";
-                        let native = null;
-
-                        if (desc) {
-                            if (typeof desc.value === "function") {
-                                type = "function";
-                                native = isNativeFunction(desc.value);
-                            } else if (desc.value !== undefined) {
-                                type = typeof desc.value;
-                            } else if (desc.get || desc.set) {
-                                type = "accessor";
-                                native = {
-                                    get: desc.get ? isNativeFunction(desc.get) : null,
-                                    set: desc.set ? isNativeFunction(desc.set) : null
-                                };
-                            }
-                        }
-
-                        properties.push({
-                            name: prop,
-                            type,
-                            native
-                        });
-                    } catch {
-                        properties.push({ name: prop, type: "inaccessible" });
-                    }
-                }
+                props = Object.getOwnPropertyNames(target);
             } catch {
-                properties.push({ name: "[cannot enumerate]" });
+                return;
             }
+
+            for (const prop of props) {
+                if (window.__collectorMarkers && window.__collectorMarkers[prop]) continue;
+
+                try {
+                    const desc = Object.getOwnPropertyDescriptor(target, prop);
+                    out.push({
+                        name: prop,
+                        descriptor: {
+                            configurable: desc?.configurable ?? null,
+                            enumerable: desc?.enumerable ?? null,
+                            writable: desc?.writable ?? null,
+                            hasValue: "value" in desc,
+                            hasGetter: !!desc.get,
+                            hasSetter: !!desc.set
+                        },
+                        // Instead of classifying, just collect raw strings
+                        stringValue:
+                            desc?.value && typeof desc.value === "function"
+                                ? String(desc.value)
+                                : undefined,
+                        getterString: desc?.get ? String(desc.get) : undefined,
+                        setterString: desc?.set ? String(desc.set) : undefined
+                    });
+                } catch {
+                    out.push({ name: prop, error: "inaccessible" });
+                }
+            }
+
             walk(Object.getPrototypeOf(target), depth + 1);
         }
 
-        walk(obj);
-        return properties.sort((a, b) => a.name.localeCompare(b.name));
+        walk(obj, 0);
+        return out;
     }
 
     return {
-        navigatorPrototype: collect(navigator),
-        windowPrototype: collect(window)
+        windowProto: collect(window),
+        navigatorProto: collect(navigator),
     };
 }

@@ -1,4 +1,49 @@
 async function runCollectors() {
+    const utilityNames = [
+        "collectAudioOffline",
+        "summarizeFloat32",
+        "collectAudioRealtime",
+        "formatRect",
+        "runRectTests",
+        "summarizeError",
+        "normalizeStack",
+        "measureRecursionDepth",
+        "getMassiveFontList",
+        "testFontMetrics",
+        "testTransparency",
+        "testSubPixel",
+        "testGradient",
+        "testShadows",
+        "testCurves",
+        "testImageScaling",
+        "sampleTextArea",
+        "testShapes",
+        "testTextRendering",
+        "testMediaQueries",
+        "getInternalFormats",
+        "testBufferMappingSupport",
+        "testWebGL",
+        "isWebGLConstant",
+        "isWebGL2",
+        "getWebGLConstants",
+        "testCompositeOperations",
+        "getShaderPrecisions",
+        "getExtensionParameters",
+        "testBufferCapabilities",
+        "samplePixels",
+        "testLineStyles",
+        "testFonts",
+        "getWebGLParameters",
+        "shaderCompileCheck",
+        "testShaderCapabilities",
+        "testComputeCapabilities",
+        "detectAllFontsComprehensive",
+        "detectAlgorithms",
+        "copyToClipboard",
+        "detectHTTP2Support",
+        "runRectTests",
+        "runCollectors",
+    ]
     const collectors = [
         collectNavigator,
         collectPrototypes,
@@ -26,7 +71,18 @@ async function runCollectors() {
         collectCanvas,
         collectCSSFeatures,
         collectTLS,
+        collectWorker,
     ];
+
+    window.__collectorMarkers = window.__collectorMarkers || {};
+
+    for (const fn of collectors) {
+        if (fn.name) window.__collectorMarkers[fn.name] = true;
+    }
+
+    for (const name of utilityNames) {
+        window.__collectorMarkers[name] = true;
+    }
 
     const results = {};
     for (let fn of collectors) {
