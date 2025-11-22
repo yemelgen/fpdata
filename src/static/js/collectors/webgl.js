@@ -1,3 +1,39 @@
+async function collectVideoCard() {
+    const canvas = document.createElement("canvas");
+    const gl =
+        canvas.getContext("webgl") ||
+        canvas.getContext("experimental-webgl") ||
+        canvas.getContext("webgl2");
+
+    if (!gl) {
+        return {
+            videoCard: {
+                supported: false
+            }
+        };
+    }
+
+    const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+
+    if (!debugInfo) {
+        return {
+            videoCard: {
+                supported: true,
+                vendor: gl.getParameter(gl.VENDOR),
+                renderer: gl.getParameter(gl.RENDERER)
+            }
+        };
+    }
+
+    return {
+        videoCard: {
+            supported: true,
+            vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+            renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+        }
+    };
+}
+
 async function collectWebGL() {
     try {
         const canvas = document.createElement('canvas');
@@ -12,11 +48,11 @@ async function collectWebGL() {
         const results = {
             supported: true,
             basicInfo: {
+                vendor: gl.getParameter(gl.VENDOR),
+                renderer: gl.getParameter(gl.RENDERER),
                 contextType: isWebGL2(gl) ? "webgl2" : "webgl",
                 version: gl.getParameter(gl.VERSION),
                 shadingLangVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION),
-                vendor: gl.getParameter(gl.VENDOR),
-                renderer: gl.getParameter(gl.RENDERER),
                 unmaskedVendor: debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) : null,
                 unmaskedRenderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null,
             },
@@ -26,7 +62,6 @@ async function collectWebGL() {
 
             // Extensions
             extensions: gl.getSupportedExtensions(),
-
          
             // Parameters
             parameters : getWebGLParameters(gl),

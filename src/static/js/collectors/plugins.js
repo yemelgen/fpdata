@@ -1,35 +1,50 @@
 async function collectPlugins() {
     const results = {
-        plugins: [],
-        mimeTypes: []
+        pluginsData: {
+            plugins: [],
+            mimeTypes: []
+        }
     };
 
     try {
+        const pluginMap = {};
+
         for (let i = 0; i < navigator.plugins.length; i++) {
             const p = navigator.plugins[i];
-            results.plugins.push({
-                name: p.name,
-                filename: p.filename,
-                description: p.description,
-                version: p.version,
-                length: p.length,
-            });
+
+            const pluginEntry = {
+                name: p.name ?? null,
+                description: p.description ?? null,
+                filename: p.filename ?? null,
+                mimeTypes: []
+            };
+
+            results.pluginsData.plugins.push(pluginEntry);
+            pluginMap[p.name] = pluginEntry;
         }
 
         for (let i = 0; i < navigator.mimeTypes.length; i++) {
             const mt = navigator.mimeTypes[i];
-            results.mimeTypes.push({
-                type: mt.type,
-                description: mt.description,
-                suffixes: mt.suffixes,
-                enabledPlugin: mt.enabledPlugin ? {
-                    name: mt.enabledPlugin.name,
-                    description: mt.enabledPlugin.description
-                } : null
-            });
+
+            const mimeRecord = {
+                type: mt.type ?? null,
+                suffixes: mt.suffixes ?? null,
+                description: mt.description ?? null,
+                enabledPlugin: mt.enabledPlugin?.name ?? null
+            };
+
+            results.pluginsData.mimeTypes.push(
+                `${mimeRecord.description}~~${mimeRecord.type}~~${mimeRecord.suffixes}`
+            );
+
+            // Attach to the correct plugin
+            if (mimeRecord.enabledPlugin && pluginMap[mimeRecord.enabledPlugin]) {
+                pluginMap[mimeRecord.enabledPlugin].mimeTypes.push(mimeRecord);
+            }
         }
-    } catch (e) {
-        results.error = e.toString();
+
+    } catch (error) {
+        results.pluginsData.error = error.toString();
     }
 
     return results;

@@ -41,6 +41,7 @@ async function runCollectors() {
         "detectAlgorithms",
         "copyToClipboard",
         "detectHTTP2Support",
+        "detectVendorFlavors",
         "runRectTests",
         "runCollectors",
     ]
@@ -60,6 +61,7 @@ async function runCollectors() {
         collectPlugins,
         collectCodecs,
         collectFonts,
+        collectVideoCard,
         collectWebGL,
         collectWebGPU,
         collectMediaDevices,

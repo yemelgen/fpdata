@@ -1,21 +1,42 @@
 async function collectOrientation() {
-    if (!window.DeviceOrientationEvent) {
-        return { deviceOrientation: { supported: false } };
+    const result = {
+        orientation: {
+            screenOrientation: null,
+            screenOrientationAngle: null,
+        },
+        deviceOrientation: {
+            supported: false,
+            available: false,
+            alpha: null,
+            beta: null,
+            gamma: null,
+        }
+    };
+
+    if (screen.orientation) {
+        result.orientation.screenOrientation = screen.orientation.type || null;
+        result.orientation.screenOrientationAngle = screen.orientation.angle ?? null;
+    } else if (typeof window.orientation === "number") {
+        result.orientation.screenOrientation = "unknown"; 
+        result.orientation.screenOrientationAngle = window.orientation;
     }
 
-    return new Promise(resolve => {
-        const result = { deviceOrientation: { supported: true } };
+    if (!window.DeviceOrientationEvent) {
+        return result; // no support
+    }
 
-        // Set a timeout in case the event doesn't fire
+    result.deviceOrientation.supported = true;
+
+    return new Promise(resolve => {
         const timeout = setTimeout(() => {
-            window.removeEventListener('deviceorientation', handler);
+            window.removeEventListener("deviceorientation", handler);
             result.deviceOrientation.available = false;
             resolve(result);
         }, 1000);
 
-        const handler = event => {
+        const handler = (event) => {
             clearTimeout(timeout);
-            window.removeEventListener('deviceorientation', handler);
+            window.removeEventListener("deviceorientation", handler);
 
             result.deviceOrientation.available = true;
             result.deviceOrientation.alpha = event.alpha;
@@ -25,6 +46,6 @@ async function collectOrientation() {
             resolve(result);
         };
 
-        window.addEventListener('deviceorientation', handler);
+        window.addEventListener("deviceorientation", handler);
     });
 }

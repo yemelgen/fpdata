@@ -51,7 +51,9 @@ async function collectPrototypes() {
     }
 
     return {
-        windowProto: collect(window),
-        navigatorProto: collect(navigator),
+        prototypes: {
+            windowProto: collect(window),
+            navigatorProto: collect(navigator),
+        }
     };
 }
